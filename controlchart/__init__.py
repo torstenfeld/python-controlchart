@@ -45,6 +45,8 @@ RULES_8_BEYOND_1SIGMA_BOTH_SIDES = "8 beyond 1*sigma on both sides"
 
 RULES_BASIC = [RULES_1_BEYOND_3SIGMA, 
                RULES_7_ON_ONE_SIDE]
+RULES_PMI = [RULES_1_BEYOND_3SIGMA,
+             RULES_8_ON_ONE_SIDE]
 RULES_WECO = [RULES_1_BEYOND_3SIGMA,
               RULES_2_OF_3_BEYOND_2SIGMA, 
               RULES_4_OF_5_BEYOND_1SIGMA, 
@@ -436,6 +438,9 @@ class Spc(object):
 
         if self.violating_points.has_key(RULES_7_ON_ONE_SIDE):
             for i in self.violating_points[RULES_7_ON_ONE_SIDE]:
+                ax.plot([i], [self._data[i]], "yo")
+        if self.violating_points.has_key(RULES_8_ON_ONE_SIDE):
+            for i in self.violating_points[RULES_8_ON_ONE_SIDE]:
                 ax.plot([i], [self._data[i]], "yo")
         if self.violating_points.has_key(RULES_1_BEYOND_3SIGMA):
             for i in self.violating_points[RULES_1_BEYOND_3SIGMA]:
