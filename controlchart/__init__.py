@@ -364,7 +364,7 @@ class Spc(object):
         else:
             size = sizes
         self.center, self.lcl, self.ucl = sf(data, size)
-        self._data = pd(data, size)
+        self._data = pd(data + newdata, size)
 
         self.violating_points = self._find_violating_points()
 
