@@ -17,10 +17,10 @@ try:
 except ImportError:
     mpl_present = False
 
-CHART_X_BAR_R_X = "Xbar R - X"
-CHART_X_BAR_R_R = "Xbar R - R"
-CHART_X_BAR_S_X = "Xbar S - X"
-CHART_X_BAR_S_S = "Xbar S - S"
+CHART_X_BAR_R_X = "x_bar R - X"
+CHART_X_BAR_R_R = "x_bar R - R"
+CHART_X_BAR_S_X = "x_bar S - X"
+CHART_X_BAR_S_S = "x_bar S - S"
 CHART_X_MR_X = "X mR - X"
 CHART_X_MR_MR = "X mR - mR"
 CHART_P = "p"
@@ -69,8 +69,10 @@ RULES_ALL = [RULES_1_BEYOND_3SIGMA,
              RULES_15_BELOW_1SIGMA,
              RULES_8_BEYOND_1SIGMA_BOTH_SIDES]
 
+
 def test_beyond_limits(data, center, lcl, ucl):
     return data[0] > ucl or data[0] < lcl
+
 
 def test_violating_runs(data, center, lcl, ucl):
     for i in xrange(1, len(data)):
@@ -79,16 +81,24 @@ def test_violating_runs(data, center, lcl, ucl):
     return True
 
 # n         2      3      4      5      6      7      8      9      10
-A2 = [0,0, 1.880, 1.023, 0.729, 0.577, 0.483, 0.419, 0.373, 0.337, 0.308]
-D3 = [0,0, 0,     0,     0,     0,     0,     0.076, 0.136, 0.184, 0.223]
-D4 = [0,0, 3.267, 2.575, 2.282, 2.115, 2.004, 1.924, 1.864, 1.816, 1.777]
-# n   0 1      2      3      4      5      6      7      8      9     10     11     12     13     14     15       20     25
-c4 = [0,0,0.7979,0.8862,0.9213,0.9400,0.9515,0.9594,0.9650,0.9693,0.9727,0.9754,0.9776,0.9794,0.9810,0.9823]#,0.9869,0.9896]
-B3 = [0,0,     0,     0,     0,     0, 0.030, 0.118, 0.185, 0.239, 0.284, 0.321, 0.354, 0.382, 0.406, 0.428]#, 0.510, 0.565]
-B4 = [0,0, 3.267, 2.568, 2.266, 2.089, 1.970, 1.882, 1.815, 1.761, 1.716, 1.679, 1.646, 1.618, 1.594, 1.572]#, 1.490, 1.435]
-B5 = [0,0,     0,     0,     0,     0, 0.029, 0.113, 0.179, 0.232, 0.276, 0.313, 0.346, 0.374, 0.399, 0.421]#, 0.504, 0.559]
-B6 = [0,0, 2.606, 2.276, 2.088, 1.964, 1.874, 1.806, 1.751, 1.707, 1.669, 1.637, 1.610, 1.585, 1.563, 1.544]#, 1.470, 1.420]
-A3 = [0,0, 2.659, 1.954, 1.628, 1.427, 1.287, 1.182, 1.099, 1.032, 0.975, 0.927, 0.886, 0.850, 0.817, 0.789]#, 0.680, 0.606]
+A2 = [0, 0, 1.880, 1.023, 0.729, 0.577, 0.483, 0.419, 0.373, 0.337, 0.308]
+D3 = [0, 0, 0, 0, 0, 0, 0, 0.076, 0.136, 0.184, 0.223]
+D4 = [0, 0, 3.267, 2.575, 2.282, 2.115, 2.004, 1.924, 1.864, 1.816, 1.777]
+# n   0 1      2      3      4      5      6      7      8      9     10     
+# 11     12     13     14     15       20     25
+c4 = [0, 0, 0.7979, 0.8862, 0.9213, 0.9400, 0.9515, 0.9594, 0.9650, 
+      0.9693, 0.9727, 0.9754, 0.9776, 0.9794, 0.9810, 0.9823]  # 0.9869, 0.9896]
+B3 = [0, 0, 0, 0, 0, 0, 0.030, 0.118, 0.185, 0.239, 0.284, 0.321, 
+      0.354, 0.382, 0.406, 0.428]  # 0.510, 0.565]
+B4 = [0, 0, 3.267, 2.568, 2.266, 2.089, 1.970, 1.882, 1.815, 1.761, 
+      1.716, 1.679, 1.646, 1.618, 1.594, 1.572]  # 1.490, 1.435]
+B5 = [0, 0, 0, 0, 0, 0, 0.029, 0.113, 0.179, 0.232, 0.276, 0.313, 
+      0.346, 0.374, 0.399, 0.421]  # 0.504, 0.559]
+B6 = [0, 0, 2.606, 2.276, 2.088, 1.964, 1.874, 1.806, 1.751, 1.707, 
+      1.669, 1.637, 1.610, 1.585, 1.563, 1.544]  # 1.470, 1.420]
+A3 = [0, 0, 2.659, 1.954, 1.628, 1.427, 1.287, 1.182, 1.099, 1.032, 
+      0.975, 0.927, 0.886, 0.850, 0.817, 0.789]  # 0.680, 0.606]
+
 
 def get_stats_x_mr_x(data, size):
     assert size == 1
@@ -102,6 +112,7 @@ def get_stats_x_mr_x(data, size):
     ucl = center + 3*sd/d2
     return center, lcl, ucl
 
+
 def get_stats_x_mr_mr(data, size):
     assert size == 1
     sd = 0
@@ -114,64 +125,69 @@ def get_stats_x_mr_mr(data, size):
     ucl = center + 3*sd/d2
     return center, lcl, ucl
 
+
 def get_stats_x_bar_r_x(data, size):
     n = size
     assert n >= 2
     assert n <= 10
 
-    Rsum = 0
+    r_sum = 0
     for xset in data:
         assert len(xset) == n
-        Rsum += max(xset) - min(xset)
-    Rbar = Rsum / len(data)
+        r_sum += max(xset) - min(xset)
+    r_bar = r_sum / len(data)
 
-    Xbar = numpy.mean(data)
+    x_bar = numpy.mean(data)
 
-    center = Xbar
-    lcl = center - A2[n]*Rbar
-    ucl = center + A2[n]*Rbar
+    center = x_bar
+    lcl = center - A2[n]*r_bar
+    ucl = center + A2[n]*r_bar
     return center, lcl, ucl
+
 
 def get_stats_x_bar_r_r(data, size):
     n = size
     assert n >= 2
     assert n <= 10
 
-    Rsum = 0
+    r_sum = 0
     for xset in data:
         assert len(xset) == n
-        Rsum += max(xset) - min(xset)
-    Rbar = Rsum / len(data)
+        r_sum += max(xset) - min(xset)
+    r_bar = r_sum / len(data)
 
-    center = Rbar
-    lcl = D3[n]*Rbar
-    ucl = D4[n]*Rbar
+    center = r_bar
+    lcl = D3[n]*r_bar
+    ucl = D4[n]*r_bar
     return center, lcl, ucl
+
 
 def get_stats_x_bar_s_x(data, size):
     n = size
     assert n >= 2
     assert n <= 10
 
-    Sbar = numpy.mean(numpy.std(data, 1, ddof=1))
-    Xbar = numpy.mean(data)
+    s_bar = numpy.mean(numpy.std(data, 1, ddof=1))
+    x_bar = numpy.mean(data)
 
-    center = Xbar
-    lcl = center - A3[n]*Sbar
-    ucl = center + A3[n]*Sbar
+    center = x_bar
+    lcl = center - A3[n]*s_bar
+    ucl = center + A3[n]*s_bar
     return center, lcl, ucl
+
 
 def get_stats_x_bar_s_s(data, size):
     n = size
     assert n >= 2
     assert n <= 10
 
-    Sbar = numpy.mean(numpy.std(data, 1, ddof=1))
+    s_bar = numpy.mean(numpy.std(data, 1, ddof=1))
 
-    center = Sbar
-    lcl = B3[n]*Sbar
-    ucl = B4[n]*Sbar
+    center = s_bar
+    lcl = B3[n]*s_bar
+    ucl = B4[n]*s_bar
     return center, lcl, ucl
+
 
 def get_stats_p(data, size):
     n = size
@@ -189,6 +205,7 @@ def get_stats_p(data, size):
         ucl = 1.0
     return center, lcl, ucl
 
+
 def get_stats_np(data, size):
     n = size
     assert n > 1
@@ -205,6 +222,7 @@ def get_stats_np(data, size):
         ucl = n
     return center, lcl, ucl
 
+
 def get_stats_c(data, size):
     cbar = numpy.mean(data)
 
@@ -214,6 +232,7 @@ def get_stats_c(data, size):
         lcl = 0
     ucl = center + 3*numpy.sqrt(cbar)
     return center, lcl, ucl
+
 
 def get_stats_u(data, size):
     n = size
@@ -228,6 +247,7 @@ def get_stats_u(data, size):
     ucl = center + 3*numpy.sqrt(cbar/n)
     return center, lcl, ucl
 
+
 def get_stats_cusum(data, size):
     """
     Find the data for a cusum graph
@@ -237,8 +257,10 @@ def get_stats_cusum(data, size):
     """ 
     return 0, None, None
 
+
 def prepare_data_none(data, size):
     return data
+
 
 def prepare_data_x_bar_rs_x(data, size):
     data2 = []
@@ -246,11 +268,13 @@ def prepare_data_x_bar_rs_x(data, size):
         data2.append(numpy.mean(xset))
     return data2
 
+
 def prepare_data_x_bar_r_r(data, size):
     data2 = []
     for xset in data:
         data2.append(max(xset) - min(xset))
     return data2
+
 
 def prepare_data_x_bar_s_s(data, size):
     data2 = []
@@ -258,11 +282,13 @@ def prepare_data_x_bar_s_s(data, size):
         data2.append(numpy.std(xset, ddof=1))
     return data2
 
+
 def prepare_data_x_mr(data, size):
     data2 = [0]
     for i in xrange(len(data)-1):
         data2.append(abs(data[i] - data[i+1]))
     return data2
+
 
 def prepare_data_p(data, size):
     data2 = [0]
@@ -270,11 +296,13 @@ def prepare_data_p(data, size):
         data2.append(float(d)/size)
     return data2
 
+
 def prepare_data_u(data, size):
     data2 = [0]
     for d in data:
         data2.append(float(d)/size)
     return data2
+
 
 def prepare_data_cusum(data, size, target = None):
     """
@@ -324,6 +352,7 @@ RULES_FUNCS = {
     RULES_15_BELOW_1SIGMA: (None, 15),
     RULES_8_BEYOND_1SIGMA_BOTH_SIDES: (None, 8)}
 
+
 class Spc(object):
     """
     Main class that provides SPC analysis. It detects SPC rules violations.
@@ -356,7 +385,7 @@ class Spc(object):
         self.stats = []
 
         sf, pd = STATS_FUNCS[chart_type]
-        if sizes == None:
+        if sizes is None:
             if isinstance(data[0], (list, tuple)):
                 size = len(data[0])
             else:
@@ -387,7 +416,7 @@ class Spc(object):
         """Generate chart using matplotlib."""
         if not mpl_present:
             raise Exception("matplotlib not installed")
-        if ax == None:
+        if ax is None:
             ax = pylab
         ax.plot(self._data, "bo-")
         ax.suptitle(self.chart_type)
