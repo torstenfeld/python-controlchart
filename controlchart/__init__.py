@@ -427,13 +427,13 @@ class Spc(object):
         ax.plot(self._data, "b.-")
         ax.suptitle(self.chart_type)
         if self.center is not None:
-            ax.plot([0, len(self._data)], [self.center, self.center], "k-")
+            ax.plot([0, len(self._data)-1], [self.center, self.center], "k-")
             pylab.figtext(0.05, 0.04, "Center = %0.3f" % self.center)
         if self.lcl is not None:
-            ax.plot([0, len(self._data)], [self.lcl, self.lcl], "k:")
+            ax.plot([0, len(self._data)-1], [self.lcl, self.lcl], "k:")
             pylab.figtext(0.3, 0.04, "LCL = %0.3f" % self.lcl)
         if self.ucl is not None:
-            ax.plot([0, len(self._data)], [self.ucl, self.ucl], "k:")
+            ax.plot([0, len(self._data)-1], [self.ucl, self.ucl], "k:")
             pylab.figtext(0.3, 0.01, "UCL = %0.3f" % self.ucl)
 #        pylab.figtext(0.05, 0.01, "StdDev = %0.3f" % self.sd)
 
