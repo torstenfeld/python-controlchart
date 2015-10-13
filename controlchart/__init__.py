@@ -8,14 +8,15 @@ Author: Michal Nowikowski <godfryd@gmail.com>
 License: MIT
 """
 
-import numpy
+import numpy as np
+from matplotlib import pyplot
 
-try:
-    import pylab
-    from matplotlib import pyplot
-    mpl_present = True
-except ImportError:
-    mpl_present = False
+# try:
+#     import pylab
+#     from matplotlib import pyplot
+#     mpl_present = True
+# except ImportError:
+#     mpl_present = False
 
 CHART_X_BAR_R_X = "x_bar R - X"
 CHART_X_BAR_R_R = "x_bar R - R"
@@ -104,7 +105,7 @@ A3 = [0, 0, 2.659, 1.954, 1.628, 1.427, 1.287, 1.182, 1.099, 1.032,
 
 def get_stats_x_mr_x(data, size):
     assert size == 1
-    center = numpy.mean(data)
+    center = np.mean(data)
     sd = 0
     for i in xrange(len(data)-1):
         sd += abs(data[i] - data[i+1])
@@ -139,7 +140,7 @@ def get_stats_x_bar_r_x(data, size):
         r_sum += max(xset) - min(xset)
     r_bar = r_sum / len(data)
 
-    x_bar = numpy.mean(data)
+    x_bar = np.mean(data)
 
     center = x_bar
     lcl = center - A2[n]*r_bar
@@ -169,8 +170,8 @@ def get_stats_x_bar_s_x(data, size):
     assert n >= 2
     assert n <= 10
 
-    s_bar = numpy.mean(numpy.std(data, 1, ddof=1))
-    x_bar = numpy.mean(data)
+    s_bar = np.mean(np.std(data, 1, ddof=1))
+    x_bar = np.mean(data)
 
     center = x_bar
     lcl = center - A3[n]*s_bar
@@ -183,7 +184,7 @@ def get_stats_x_bar_s_s(data, size):
     assert n >= 2
     assert n <= 10
 
-    s_bar = numpy.mean(numpy.std(data, 1, ddof=1))
+    s_bar = np.mean(np.std(data, 1, ddof=1))
 
     center = s_bar
     lcl = B3[n]*s_bar
@@ -196,7 +197,7 @@ def get_stats_p(data, size):
     assert n > 1
 
     pbar = float(sum(data)) / (n * len(data))
-    sd = numpy.sqrt(pbar*(1-pbar)/n)
+    sd = np.sqrt(pbar*(1-pbar)/n)
 
     center = pbar
     lcl = center - 3*sd
@@ -213,7 +214,7 @@ def get_stats_np(data, size):
     assert n > 1
 
     pbar = float(sum(data)) / (n * len(data))
-    sd = numpy.sqrt(n*pbar*(1-pbar))
+    sd = np.sqrt(n*pbar*(1-pbar))
 
     center = n*pbar
     lcl = center - 3*sd
@@ -226,13 +227,13 @@ def get_stats_np(data, size):
 
 
 def get_stats_c(data, size):
-    cbar = numpy.mean(data)
+    cbar = np.mean(data)
 
     center = cbar
-    lcl = center - 3*numpy.sqrt(cbar)
+    lcl = center - 3*np.sqrt(cbar)
     if lcl < 0:
         lcl = 0
-    ucl = center + 3*numpy.sqrt(cbar)
+    ucl = center + 3*np.sqrt(cbar)
     return center, lcl, ucl
 
 
@@ -243,10 +244,10 @@ def get_stats_u(data, size):
     cbar = float(sum(data))/(len(data)*n)
 
     center = cbar
-    lcl = center - 3*numpy.sqrt(cbar/n)
+    lcl = center - 3*np.sqrt(cbar/n)
     if lcl < 0:
         lcl = 0
-    ucl = center + 3*numpy.sqrt(cbar/n)
+    ucl = center + 3*np.sqrt(cbar/n)
     return center, lcl, ucl
 
 
@@ -267,7 +268,7 @@ def prepare_data_none(data, size):
 def prepare_data_x_bar_rs_x(data, size):
     data2 = []
     for xset in data:
-        data2.append(numpy.mean(xset))
+        data2.append(np.mean(xset))
     return data2
 
 
@@ -281,7 +282,7 @@ def prepare_data_x_bar_r_r(data, size):
 def prepare_data_x_bar_s_s(data, size):
     data2 = []
     for xset in data:
-        data2.append(numpy.std(xset, ddof=1))
+        data2.append(np.std(xset, ddof=1))
     return data2
 
 
@@ -306,7 +307,7 @@ def prepare_data_u(data, size):
     return data2
 
 
-def prepare_data_cusum(data, size, target = None):
+def prepare_data_cusum(data, size, target=None):
     """
     Prepares the data for a CUSUM graph
 
@@ -320,7 +321,7 @@ def prepare_data_cusum(data, size, target = None):
     """
     data2 = []
     if target is None:
-        target = numpy.mean(data)
+        target = np.mean(data)
     for d in data:
         data2.append(float(d) - target)
     data3 = [sum(data2[:i]) for i in xrange(len(data2)+1)]
@@ -411,7 +412,7 @@ class Spc(object):
         for i in xrange(len(self._data)):
             for r in rs:
                 func, points_num = RULES_FUNCS[r]
-                if func == None or i <= points_num - 1:
+                if func is None or i <= points_num - 1:
                     continue
                 if func(self._data[i-points_num+1:i+1], self.center, self.lcl, self.ucl):
                     points.setdefault(r, []).append(i)
@@ -419,8 +420,8 @@ class Spc(object):
 
     def get_chart(self, ax=None):
         """Generate chart using matplotlib."""
-        if not mpl_present:
-            raise Exception("matplotlib not installed")
+        # if not mpl_present:
+        #     raise Exception("matplotlib not installed")
         if ax is None:
             ax = pylab
         ax.plot(self._data, "bo-")
@@ -436,19 +437,22 @@ class Spc(object):
             pylab.figtext(0.3, 0.01, "UCL = %0.3f" % self.ucl)
 #        pylab.figtext(0.05, 0.01, "StdDev = %0.3f" % self.sd)
 
-        if self.violating_points.has_key(RULES_7_ON_ONE_SIDE):
+        if RULES_7_ON_ONE_SIDE in self.violating_points:
+            # if self.violating_points.has_key():
             for i in self.violating_points[RULES_7_ON_ONE_SIDE]:
                 ax.plot([i], [self._data[i]], "yo")
-        if self.violating_points.has_key(RULES_8_ON_ONE_SIDE):
+        if RULES_8_ON_ONE_SIDE in self.violating_points:
+            # if self.violating_points.has_key(RULES_8_ON_ONE_SIDE):
             for i in self.violating_points[RULES_8_ON_ONE_SIDE]:
                 ax.plot([i], [self._data[i]], "yo")
-        if self.violating_points.has_key(RULES_1_BEYOND_3SIGMA):
+        if RULES_1_BEYOND_3SIGMA in self.violating_points:
+            # if self.violating_points.has_key(RULES_1_BEYOND_3SIGMA):
             for i in self.violating_points[RULES_1_BEYOND_3SIGMA]:
                 ax.plot([i], [self._data[i]], "ro")
 #        pylab.show()
         return ax
 
-    def get_violating_points(self, rules=[]):
+    def get_violating_points(self):
         """Return points that violates rules of control chart"""
         return self.violating_points
 
