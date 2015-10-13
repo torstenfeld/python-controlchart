@@ -424,7 +424,7 @@ class Spc(object):
         #     raise Exception("matplotlib not installed")
         if ax is None:
             ax = pylab
-        ax.plot(self._data, "bo-")
+        ax.plot(self._data, "b.-")
         ax.suptitle(self.chart_type)
         if self.center is not None:
             ax.plot([0, len(self._data)], [self.center, self.center], "k-")
@@ -440,15 +440,15 @@ class Spc(object):
         if RULES_7_ON_ONE_SIDE in self.violating_points:
             # if self.violating_points.has_key():
             for i in self.violating_points[RULES_7_ON_ONE_SIDE]:
-                ax.plot([i], [self._data[i]], "yo")
+                ax.plot([i], [self._data[i]], "yo", ms=10)
         if RULES_8_ON_ONE_SIDE in self.violating_points:
             # if self.violating_points.has_key(RULES_8_ON_ONE_SIDE):
             for i in self.violating_points[RULES_8_ON_ONE_SIDE]:
-                ax.plot([i], [self._data[i]], "yo")
+                ax.plot([i], [self._data[i]], "yo", ms=10)
         if RULES_1_BEYOND_3SIGMA in self.violating_points:
             # if self.violating_points.has_key(RULES_1_BEYOND_3SIGMA):
             for i in self.violating_points[RULES_1_BEYOND_3SIGMA]:
-                ax.plot([i], [self._data[i]], "ro")
+                ax.plot([i], [self._data[i]], "ro", ms=10)
 #        pylab.show()
         return ax
 
