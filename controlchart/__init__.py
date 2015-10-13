@@ -446,6 +446,7 @@ class Spc(object):
             for i in self.violating_points[RULES_1_BEYOND_3SIGMA]:
                 ax.plot([i], [self._data[i]], "ro")
 #        pylab.show()
+        return ax
 
     def get_violating_points(self, rules=[]):
         """Return points that violates rules of control chart"""
