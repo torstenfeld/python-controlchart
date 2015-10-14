@@ -418,24 +418,28 @@ class Spc(object):
                     points.setdefault(r, []).append(i)
         return points
 
-    def get_chart(self, ax=None):
+    def get_chart(self):
         """Generate chart using matplotlib."""
-        # if not mpl_present:
-        #     raise Exception("matplotlib not installed")
-        if ax is None:
-            ax = pylab
-        ax.plot(self._data, "b.-")
-        ax.suptitle(self.chart_type)
+        try:
+            import matplotlib.pyplot as plt
+        except ImportError:
+            raise Exception("matplotlib not installed")
+
+        plt.figure(figsize=(20, 10))
+        ax = plt.subplot(111)  # creating the first axis
+
+        ax.plot(self._data, "bo-", ms=5, label='Data')
+        plt.title(self.chart_type)  # setting the title for the figure
         if self.center is not None:
-            ax.plot([0, len(self._data)-1], [self.center, self.center], "k-")
-            pylab.figtext(0.05, 0.04, "Center = %0.3f" % self.center)
+            ax.plot([0, len(self._data)-1], [self.center, self.center], "k-", label='Center (%0.3f)' % self.center)
+            # plt.figtext(0.05, 0.04, "Center = %0.3f" % self.center)
         if self.lcl is not None:
-            ax.plot([0, len(self._data)-1], [self.lcl, self.lcl], "k:")
-            pylab.figtext(0.3, 0.04, "LCL = %0.3f" % self.lcl)
+            ax.plot([0, len(self._data)-1], [self.lcl, self.lcl], "k:", label='LCL (%0.3f)' % self.lcl)
+            # plt.figtext(0.3, 0.04, "LCL = %0.3f" % self.lcl)
         if self.ucl is not None:
-            ax.plot([0, len(self._data)-1], [self.ucl, self.ucl], "k:")
-            pylab.figtext(0.3, 0.01, "UCL = %0.3f" % self.ucl)
-#        pylab.figtext(0.05, 0.01, "StdDev = %0.3f" % self.sd)
+            ax.plot([0, len(self._data)-1], [self.ucl, self.ucl], "k:", label='UCL (%0.3f)' % self.ucl)
+            # plt.figtext(0.3, 0.01, "UCL = %0.3f" % self.ucl)
+            # plt.figtext(0.05, 0.01, "StdDev = %0.3f" % self.sd)
 
         if RULES_7_ON_ONE_SIDE in self.violating_points:
             # if self.violating_points.has_key():
@@ -449,7 +453,7 @@ class Spc(object):
             # if self.violating_points.has_key(RULES_1_BEYOND_3SIGMA):
             for i in self.violating_points[RULES_1_BEYOND_3SIGMA]:
                 ax.plot([i], [self._data[i]], "ro", ms=10)
-#        pylab.show()
+        # pylab.show()
         return ax
 
     def get_violating_points(self):
