@@ -9,14 +9,7 @@ License: MIT
 """
 
 import numpy as np
-from matplotlib import pyplot
 
-# try:
-#     import pylab
-#     from matplotlib import pyplot
-#     mpl_present = True
-# except ImportError:
-#     mpl_present = False
 
 CHART_X_BAR_R_X = "x_bar R - X"
 CHART_X_BAR_R_R = "x_bar R - R"
@@ -432,28 +425,20 @@ class Spc(object):
         plt.title(self.chart_type)  # setting the title for the figure
         if self.center is not None:
             ax.plot([0, len(self._data)-1], [self.center, self.center], "k-", label='Center (%0.3f)' % self.center)
-            # plt.figtext(0.05, 0.04, "Center = %0.3f" % self.center)
         if self.lcl is not None:
             ax.plot([0, len(self._data)-1], [self.lcl, self.lcl], "k:", label='LCL (%0.3f)' % self.lcl)
-            # plt.figtext(0.3, 0.04, "LCL = %0.3f" % self.lcl)
         if self.ucl is not None:
             ax.plot([0, len(self._data)-1], [self.ucl, self.ucl], "k:", label='UCL (%0.3f)' % self.ucl)
-            # plt.figtext(0.3, 0.01, "UCL = %0.3f" % self.ucl)
-            # plt.figtext(0.05, 0.01, "StdDev = %0.3f" % self.sd)
 
         if RULES_7_ON_ONE_SIDE in self.violating_points:
-            # if self.violating_points.has_key():
             for i in self.violating_points[RULES_7_ON_ONE_SIDE]:
                 ax.plot([i], [self._data[i]], "yo", ms=10)
         if RULES_8_ON_ONE_SIDE in self.violating_points:
-            # if self.violating_points.has_key(RULES_8_ON_ONE_SIDE):
             for i in self.violating_points[RULES_8_ON_ONE_SIDE]:
                 ax.plot([i], [self._data[i]], "yo", ms=10)
         if RULES_1_BEYOND_3SIGMA in self.violating_points:
-            # if self.violating_points.has_key(RULES_1_BEYOND_3SIGMA):
             for i in self.violating_points[RULES_1_BEYOND_3SIGMA]:
                 ax.plot([i], [self._data[i]], "ro", ms=10)
-        # pylab.show()
         return ax
 
     def get_violating_points(self):
