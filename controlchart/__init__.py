@@ -349,6 +349,7 @@ RULES_FUNCS = {
     RULES_8_BEYOND_1SIGMA_BOTH_SIDES: (None, 8)}
 
 
+# noinspection PyUnresolvedReferences
 class Spc(object):
     """
     Main class that provides SPC analysis. It detects SPC rules violations.
@@ -415,12 +416,15 @@ class Spc(object):
                     points.setdefault(r, []).append(i)
         return points
 
-    def get_chart(self):
+    def get_chart(self, legend=True):
         """Generate chart using matplotlib."""
         try:
-            import matplotlib.pyplot as plt
+            import matplotlib
         except ImportError:
             raise Exception("matplotlib not installed")
+        else:
+            import matplotlib.pyplot as plt
+            import matplotlib.lines as mlines
 
         plt.figure(figsize=(20, 10))
         ax = plt.subplot(111)  # creating the first axis
@@ -434,15 +438,23 @@ class Spc(object):
         if self.ucl is not None:
             ax.plot([0, len(self._data)-1], [self.ucl, self.ucl], "k:", label='UCL (%0.3f)' % self.ucl)
 
+        handles, labels = ax.get_legend_handles_labels()
+
         if RULES_7_ON_ONE_SIDE in self.violating_points:
             for i in self.violating_points[RULES_7_ON_ONE_SIDE]:
                 ax.plot([i], [self._data[i]], "yo", ms=10)
+            handles.append(mlines.Line2D([], [], color='yellow', linestyle='', marker='o', ms=10, label='Run of 7'))
         if RULES_8_ON_ONE_SIDE in self.violating_points:
             for i in self.violating_points[RULES_8_ON_ONE_SIDE]:
                 ax.plot([i], [self._data[i]], "yo", ms=10)
+            handles.append(mlines.Line2D([], [], color='yellow', linestyle='', marker='o', ms=10, label='Run of 8'))
         if RULES_1_BEYOND_3SIGMA in self.violating_points:
             for i in self.violating_points[RULES_1_BEYOND_3SIGMA]:
                 ax.plot([i], [self._data[i]], "ro", ms=10)
+            handles.append(mlines.Line2D([], [], color='red', linestyle='', marker='o', ms=10, label='Out of Limits'))
+
+        if legend is True:
+            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handles=handles)
         return ax
 
     def get_violating_points(self):
