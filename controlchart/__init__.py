@@ -416,7 +416,7 @@ class Spc(object):
                     points.setdefault(r, []).append(i)
         return points
 
-    def get_chart(self, legend=True):
+    def get_chart(self, legend=True, title=None):
         """Generate chart using matplotlib."""
         try:
             import matplotlib
@@ -430,7 +430,9 @@ class Spc(object):
         ax = plt.subplot(111)  # creating the first axis
 
         ax.plot(self._data, "bo-", ms=5, label='Data')
-        plt.title(self.chart_type)  # setting the title for the figure
+
+        title = self.chart_type if title is None else title
+        plt.title(title, fontsize=22)  # setting the title for the figure
         if self.center is not None:
             ax.plot([0, len(self._data)-1], [self.center, self.center], "k-", label='Center (%0.3f)' % self.center)
         if self.lcl is not None:
