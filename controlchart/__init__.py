@@ -436,9 +436,9 @@ class Spc(object):
         if self.center is not None:
             ax.plot([0, len(self._data)-1], [self.center, self.center], "k-", label='Center (%0.3f)' % self.center)
         if self.lcl is not None:
-            ax.plot([0, len(self._data)-1], [self.lcl, self.lcl], "k:", label='LCL (%0.3f)' % self.lcl)
+            ax.plot([0, len(self._data)-1], [self.lcl, self.lcl], "r-.", linewidth=4, label='LCL (%0.3f)' % self.lcl)
         if self.ucl is not None:
-            ax.plot([0, len(self._data)-1], [self.ucl, self.ucl], "k:", label='UCL (%0.3f)' % self.ucl)
+            ax.plot([0, len(self._data)-1], [self.ucl, self.ucl], "r-.", linewidth=4, label='UCL (%0.3f)' % self.ucl)
 
         handles, labels = ax.get_legend_handles_labels()
 
