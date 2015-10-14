@@ -377,6 +377,7 @@ class Spc(object):
 
     def __init__(self, data, chart_type, rules=RULES_BASIC, stats_custom=None, newdata=None, sizes=None):
         self.orig_data = data
+        self.data_is_list = True if type(data) is list else False
         self.chart_type = chart_type
         self.rules = rules
         self.stats = []
@@ -395,7 +396,11 @@ class Spc(object):
             self.center, self.lcl, self.ucl = sf(data, size)
         else:
             self.center, self.lcl, self.ucl = stats_custom
-        self._data = pd(data + newdata, size)
+        try:
+            self._data = pd(data + newdata, size)
+        except Exception:
+            datavalues = list(data.values)
+            self._data = pd(datavalues + newdata, size)
 
         self.violating_points = self._find_violating_points()
 
@@ -427,36 +432,48 @@ class Spc(object):
             import matplotlib.lines as mlines
 
         plt.figure(figsize=(20, 10))
-        ax = plt.subplot(111)  # creating the first axis
+        ax = plt.subplot(111)
 
-        ax.plot(self._data, "bo-", ms=5, label='Data')
+        if self.data_is_list:
+            ax.plot(self._data, "bo-", ms=5, label='Data')
+        else:
+            plt.plot(self.orig_data.index.to_pydatetime(), self.orig_data.values, "bo-", ms=5, label='Data')
 
         title = self.chart_type if title is None else title
         plt.title(title, fontsize=22)  # setting the title for the figure
         if self.center is not None:
-            ax.plot([0, len(self._data)-1], [self.center, self.center], "k-", label='Center (%0.3f)' % self.center)
-        if self.lcl is not None:
-            ax.plot([0, len(self._data)-1], [self.lcl, self.lcl], "r-.", linewidth=4, label='LCL (%0.3f)' % self.lcl)
+            plt.axhline(self.center, color='k', linestyle='-', label='Center (%0.3f)' % self.center)
         if self.ucl is not None:
-            ax.plot([0, len(self._data)-1], [self.ucl, self.ucl], "r-.", linewidth=4, label='UCL (%0.3f)' % self.ucl)
-
-        handles, labels = ax.get_legend_handles_labels()
+            plt.axhline(self.ucl, color='r', linestyle='-.', linewidth=4, label='UCL (%0.3f)' % self.ucl)
+        if self.lcl is not None:
+            plt.axhline(self.lcl, color='r', linestyle='-.', linewidth=4, label='LCL (%0.3f)' % self.lcl)
 
         if RULES_7_ON_ONE_SIDE in self.violating_points:
             for i in self.violating_points[RULES_7_ON_ONE_SIDE]:
-                ax.plot([i], [self._data[i]], "yo", ms=10)
-            handles.append(mlines.Line2D([], [], color='yellow', linestyle='', marker='o', ms=10, label='Run of 7'))
+                if self.data_is_list is not True:
+                    index = self.orig_data.index[i]
+                    ax.plot([index], [self._data[i]], "yo", ms=10)
+                else:
+                    ax.plot([i], [self._data[i]], "yo", ms=10)
+            ax.plot([], [], color='yellow', linestyle='', marker='o', ms=10, label='Run of 7')
+
         if RULES_8_ON_ONE_SIDE in self.violating_points:
             for i in self.violating_points[RULES_8_ON_ONE_SIDE]:
-                ax.plot([i], [self._data[i]], "yo", ms=10)
-            handles.append(mlines.Line2D([], [], color='yellow', linestyle='', marker='o', ms=10, label='Run of 8'))
+                if self.data_is_list is not True:
+                    index = self.orig_data.index[i]
+                    ax.plot([index], [self._data[i]], "yo", ms=10)
+                else:
+                    ax.plot([i], [self._data[i]], "yo", ms=10)
+            ax.plot([], [], color='yellow', linestyle='', marker='o', ms=10, label='Run of 8')
+
         if RULES_1_BEYOND_3SIGMA in self.violating_points:
             for i in self.violating_points[RULES_1_BEYOND_3SIGMA]:
-                ax.plot([i], [self._data[i]], "ro", ms=10)
-            handles.append(mlines.Line2D([], [], color='red', linestyle='', marker='o', ms=10, label='Out of Limits'))
-
-        if legend is True:
-            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handles=handles)
+                if self.data_is_list is not True:
+                    index = self.orig_data.index[i]
+                    ax.plot([index], [self._data[i]], "ro", ms=10)
+                else:
+                    ax.plot([i], [self._data[i]], "ro", ms=10)
+            ax.plot([], [], color='red', linestyle='', marker='o', ms=10, label='Out of Limits')
 
         # readability improvements
         ax.spines["top"].set_visible(False)
@@ -468,6 +485,9 @@ class Spc(object):
         plt.grid(axis='y')
         ylim = plt.ylim()
         plt.ylim((ylim[0]-1, ylim[1]+1))
+
+        if legend is True:
+            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         return ax
 
     def get_violating_points(self):
