@@ -457,6 +457,17 @@ class Spc(object):
 
         if legend is True:
             plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handles=handles)
+
+        # readability improvements
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.get_xaxis().tick_bottom()
+        ax.get_yaxis().tick_left()
+        plt.xticks(fontsize=14)
+        plt.yticks(fontsize=14)
+        plt.grid(axis='y')
+        ylim = plt.ylim()
+        plt.ylim((ylim[0]-1, ylim[1]+1))
         return ax
 
     def get_violating_points(self):
