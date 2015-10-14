@@ -374,11 +374,13 @@ class Spc(object):
     >>> s.get_chart()
     """
 
-    def __init__(self, data, chart_type, rules=RULES_BASIC, stats_custom=None, newdata=[], sizes=None):
+    def __init__(self, data, chart_type, rules=RULES_BASIC, stats_custom=None, newdata=None, sizes=None):
         self.orig_data = data
         self.chart_type = chart_type
         self.rules = rules
         self.stats = []
+        if newdata is None:
+            newdata = []
 
         sf, pd = STATS_FUNCS[chart_type]
         if sizes is None:
@@ -396,7 +398,9 @@ class Spc(object):
 
         self.violating_points = self._find_violating_points()
 
-    def _find_violating_points(self, rules=[]):
+    def _find_violating_points(self, rules=None):
+        if rules is None:
+            rules = []
         if len(rules) > 0:
             rs = rules
         else:
