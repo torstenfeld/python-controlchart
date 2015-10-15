@@ -376,8 +376,7 @@ class Spc(object):
     """
 
     def __init__(self, data, chart_type, rules=RULES_BASIC, stats_custom=None, newdata=None, sizes=None):
-        self.orig_data = data
-        self.data_is_list = True if type(data) is list else False
+        data = data if isinstance(data, list) else list(data)
         self.chart_type = chart_type
         self.rules = rules
         self.stats = []
@@ -396,12 +395,8 @@ class Spc(object):
             self.center, self.lcl, self.ucl = sf(data, size)
         else:
             self.center, self.lcl, self.ucl = stats_custom
-        try:
-            self._data = pd(data + newdata, size)
-        except Exception:
-            datavalues = list(data.values)
-            self._data = pd(datavalues + newdata, size)
 
+        self._data = pd(data + newdata, size)
         self.violating_points = self._find_violating_points()
 
     def _find_violating_points(self, rules=None):
@@ -421,7 +416,7 @@ class Spc(object):
                     points.setdefault(r, []).append(i)
         return points
 
-    def get_chart(self, legend=True, title=None):
+    def get_chart(self, legend=True, title=None, index=None):
         """Generate chart using matplotlib."""
         try:
             import matplotlib
@@ -431,13 +426,16 @@ class Spc(object):
             import matplotlib.pyplot as plt
             import matplotlib.lines as mlines
 
+        if index is not None and not isinstance(index, list):
+            index = list(index)
+
         plt.figure(figsize=(20, 10))
         ax = plt.subplot(111)
 
-        if self.data_is_list:
-            ax.plot(self._data, "bo-", ms=5, label='Data')
+        if index is None:
+            plt.plot(self._data, "bo-", ms=5, label='Data')
         else:
-            plt.plot(self.orig_data.index.to_pydatetime(), self.orig_data.values, "bo-", ms=5, label='Data')
+            plt.plot(index, self._data, "bo-", ms=5, label='Data')
 
         title = self.chart_type if title is None else title
         plt.title(title, fontsize=22)  # setting the title for the figure
@@ -450,27 +448,24 @@ class Spc(object):
 
         if RULES_7_ON_ONE_SIDE in self.violating_points:
             for i in self.violating_points[RULES_7_ON_ONE_SIDE]:
-                if self.data_is_list is not True:
-                    index = self.orig_data.index[i]
-                    ax.plot([index], [self._data[i]], "yo", ms=10)
+                if index is not None:
+                    ax.plot([index[i]], [self._data[i]], "yo", ms=10)
                 else:
                     ax.plot([i], [self._data[i]], "yo", ms=10)
             ax.plot([], [], color='yellow', linestyle='', marker='o', ms=10, label='Run of 7')
 
         if RULES_8_ON_ONE_SIDE in self.violating_points:
             for i in self.violating_points[RULES_8_ON_ONE_SIDE]:
-                if self.data_is_list is not True:
-                    index = self.orig_data.index[i]
-                    ax.plot([index], [self._data[i]], "yo", ms=10)
+                if index is not None:
+                    ax.plot([index[i]], [self._data[i]], "yo", ms=10)
                 else:
                     ax.plot([i], [self._data[i]], "yo", ms=10)
             ax.plot([], [], color='yellow', linestyle='', marker='o', ms=10, label='Run of 8')
 
         if RULES_1_BEYOND_3SIGMA in self.violating_points:
             for i in self.violating_points[RULES_1_BEYOND_3SIGMA]:
-                if self.data_is_list is not True:
-                    index = self.orig_data.index[i]
-                    ax.plot([index], [self._data[i]], "ro", ms=10)
+                if index is not None:
+                    ax.plot([index[i]], [self._data[i]], "ro", ms=10)
                 else:
                     ax.plot([i], [self._data[i]], "ro", ms=10)
             ax.plot([], [], color='red', linestyle='', marker='o', ms=10, label='Out of Limits')
