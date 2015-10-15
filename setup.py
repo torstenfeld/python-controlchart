@@ -1,14 +1,16 @@
 from setuptools import setup
 
+VERSION = '0.1.5'
+
 setup(
     name='python-controlchart',
     packages=['controlchart'],
-    version='0.1.4',
+    version=VERSION,
     description='Creation of control charts with matplotlib',
     author='Torsten Feld',
     author_email='torsten@torsten-feld.de',
     url='https://github.com/torstenfeld/python-controlchart',
-    download_url='https://github.com/peterldowns/mypackage/tarball/0.1',
+    download_url='https://github.com/torstenfeld/python-controlchart/tarball/' + VERSION,
     keywords=['statistics', 'spc', 'chart', 'tool', 'process control', 'shewhart', 'control chart'],
     requires=['numpy'],
     classifiers=[
