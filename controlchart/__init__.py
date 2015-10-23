@@ -481,9 +481,10 @@ class Spc(object):
         ylim = plt.ylim()
         plt.ylim((ylim[0]-1, ylim[1]+1))
 
+        legend_output = None
         if legend is True:
-            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-        return ax
+            legend_output = plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        return ax, legend_output
 
     def get_violating_points(self):
         """Return points that violates rules of control chart"""
